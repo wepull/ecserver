@@ -1,0 +1,73 @@
+config:
+  target: "http://default.ecserver.10.10.0.10.nip.io"
+  http:
+    # Responses have to be sent within 10 seconds, or an `ETIMEDOUT` error gets raised.
+    timeout: 10
+  environments:
+    production:
+      target: "http://default.ecserver.10.10.0.10.nip.io"
+      phases:
+        - duration: 15
+          arrivalRate: 5
+    unit:
+      target: "http://default.ecserver.10.10.0.10.nip.io"
+      phases:
+        - duration: 5
+          arrivalRate: 2
+  phases:
+    - duration: 5
+      arrivalRate: 5
+      name: Warm up
+    - duration: 10
+      arrivalRate: 7
+      rampTo : 30
+      name: Limited ramp up load
+    - duration: 20
+      arrivalRate: 10
+      name: Sustained Load
+  payload:
+    path: "options.csv"
+    fields:
+      - "name"
+      - "image_url"
+  plugins:
+    expect: 
+      outputFormat: silent
+    metrics-by-endpoint:
+      useOnlyRequestNames: true
+    
+scenarios:
+  - name: "Get Candidates"
+    flow:
+      - get:
+          url: "/"
+          name: getRequest
+          expect:
+            - statusCode: 200
+            - contentType: json
+
+  - name: "Add Candidate"
+    flow:
+      - post:
+          url: "/"
+          name: postRequest
+          json: 
+            Name: "{{name}}"
+            ImageUrl: "{{image_url}}"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            
+  - name: "Delete Candidate"
+    flow:
+      - delete:
+          url: "/"
+          name: deleteRequest
+          json: 
+            Name: "{{name}}"
+          expect:
+            - statusCode:
+              - 200
+              - 400
+
+
