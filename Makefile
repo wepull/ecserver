@@ -32,6 +32,11 @@ else
 	docker tag ${ECSVR_IMG}:${COMMITID} ${ECSVR_IMG}:${IMAGE_TAG}
 endif
 
+.PHONY: push
+push:
+	docker tag ${ECSVR_IMG}:${IMAGE_TAG} zbio/${ECSVR_IMG}:${IMAGE_TAG}
+	docker push zbio/${ECSVR_IMG}:${IMAGE_TAG}
+
 .PHONY: helm-deploy
 helm-deploy: 
 ifeq ($(strip $(CLUSTER_IP)),)
