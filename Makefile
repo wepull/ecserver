@@ -1,5 +1,5 @@
 ECSVR_IMG=ecserver
-TEST_IMG=service-test-suite
+COMMITID := $(shell git rev-parse HEAD)
 ifndef IMAGE_TAG
   IMAGE_TAG=latest
 endif
@@ -25,9 +25,11 @@ dockerise: build-ecserver
 .PHONY: build-ecserver
 build-ecserver:
 ifdef DOCKER_HOST
-	docker -H ${DOCKER_HOST} build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
+	docker -H ${DOCKER_HOST} build -t ${ECSVR_IMG}:${COMMITID} -f ecserver/Dockerfile ecserver
+	docker -H ${DOCKER_HOST} tag ${ECSVR_IMG}:${COMMITID} ${ECSVR_IMG}:${IMAGE_TAG}
 else
 	docker build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
+	docker tag ${ECSVR_IMG}:${COMMITID} ${ECSVR_IMG}:${IMAGE_TAG}
 endif
 
 .PHONY: helm-deploy
