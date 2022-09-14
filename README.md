@@ -22,7 +22,7 @@ Depends on: ecserver
 
 ### ECserver
 
-An backend app written in Golang for election-commission to store list of candidates.111
+An backend app written in Golang for election-commission to store list of candidates.
 
 ## How to deploy
 
