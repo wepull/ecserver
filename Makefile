@@ -27,7 +27,7 @@ pre-dockerise:
     docker pull nginx:stable-alpine
 
 .PHONY: dockerise
-dockerise: pre-dockerise build-ecserver 
+dockerise: pre-dockerise build-ecserver
 
 .PHONY: build-ecserver
 build-ecserver:
