@@ -19,8 +19,15 @@ test-ecserver:
    zbio/artillery-custom \
    run -e unit /scripts/test.yaml
 
+.PHONY: pre-dockerise
+pre-dockerise:
+    docker pull golang:1.19.3-alpine3.16
+    docker pull alpine:3.16
+    docker pull node:14.21.1-alpine3.16
+    docker pull nginx:stable-alpine
+
 .PHONY: dockerise
-dockerise: build-ecserver
+dockerise: pre-dockerise build-ecserver
 
 .PHONY: build-ecserver
 build-ecserver:
@@ -28,7 +35,7 @@ ifdef DOCKER_HOST
 	docker -H ${DOCKER_HOST} build -t ${ECSVR_IMG}:${COMMITID} -f ecserver/Dockerfile ecserver
 	docker -H ${DOCKER_HOST} tag ${ECSVR_IMG}:${COMMITID} ${ECSVR_IMG}:${IMAGE_TAG}
 else
-	docker build -t ${ECSVR_IMG}:${IMAGE_TAG} -f ecserver/Dockerfile ecserver
+	docker build -t ${ECSVR_IMG}:${COMMITID} -f ecserver/Dockerfile ecserver
 	docker tag ${ECSVR_IMG}:${COMMITID} ${ECSVR_IMG}:${IMAGE_TAG}
 endif
 
