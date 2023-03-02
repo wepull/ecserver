@@ -63,6 +63,7 @@ func writeBasicResponse(w http.ResponseWriter, resp *BasicResponse) {
 
 func writeAllCandidatesResponse(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 	respJson, err := json.Marshal(&AllCandidatesResponse{
 		Candidates: candidates,
