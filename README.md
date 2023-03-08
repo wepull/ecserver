@@ -1,4 +1,4 @@
-# Voting app
+# Voting app - Roost sample
 
 ## About project
 
